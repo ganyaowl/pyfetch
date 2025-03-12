@@ -1,6 +1,7 @@
 import psutil
 import platform
 import wmi
+import GPUtil
 
 from misc.misc import output_preparation
 
@@ -30,11 +31,12 @@ def cpu_stats():
 
 def gpu_stats():
     try:
-        import GPUtil
         gpus = GPUtil.getGPUs()
+        if not gpus:
+            return "GPU: None detected"
         return f"\033[93mGPU:\033[00m \033[97m{gpus[0].name}\033[00m - \033[92m{gpus[0].memoryUsed}Mib\033[00m / \033[91m{gpus[0].memoryTotal}Mib\033[00m"
     except ModuleNotFoundError:
-        return "GPU: None"
+        return "GPU: None (GPUtil not installed)"
 
 def memory_stats() -> str:
     pvm = psutil.virtual_memory()
