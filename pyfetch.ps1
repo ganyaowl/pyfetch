@@ -1,38 +1,40 @@
-$pythonExists = Get-Command python -ErrorAction SilentlyContinue
-$debug = $false
+param (
+    [switch]$a
+)
 
-if ($args -contains "-a") {
-    $debug = $true
+function Log {
+    param ([string]$Message, [string]$Color = "White")
+    if ($a) { Write-Host $Message -ForegroundColor $Color }
 }
 
-$debug && Write-Host "Checking Python installation..."
+$pythonExists = Get-Command python -ErrorAction SilentlyContinue
 
 if (-not $pythonExists) {
-    $debug && Write-Host "Python is not installed! Please install it and try again." -ForegroundColor Red
+    Write-Host "Python is not installed! Please install Python and try again." -ForegroundColor Red
     exit 1
 }
 
-$debug && Write-Host "Creating Virtual Environment..."
+Log "Creating virtual environment..."
 python -m venv .venv
 
-$debug && Write-Host "Activating VENV..."
-& .venv\Scripts\Activate
+Log "Activating virtual environment..."
+.venv\Scripts\Activate
 
-if (Test-Path requirements.txt) {
-    $debug && Write-Host "Installing dependencies..."
+if (Test-Path "requirements.txt") {
+    Log "Installing dependencies..."
     pip install -r requirements.txt --quiet
 } else {
-    $debug && Write-Host "requirements.txt wasn't found!" -ForegroundColor Yellow
+    Log "requirements.txt not found!" "Yellow"
 }
 
-if (Test-Path pyfetch.py) {
-    $debug && Write-Host "Running program..."
+if (Test-Path "pyfetch.py") {
+    Log "Running pyfetch.py..."
     python pyfetch.py
 } else {
-    $debug && Write-Host "pyfetch.py wasn't found!" -ForegroundColor Red
+    Log "pyfetch.py not found!" "Red"
 }
 
-Start-Sleep -Seconds 3
+Start-Sleep -Seconds 5
 
-$debug && Write-Host "Deactivating VENV..."
-& .venv\Scripts\deactivate
+Log "Deactivating virtual environment..."
+deactivate
