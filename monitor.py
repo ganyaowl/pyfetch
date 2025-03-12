@@ -7,7 +7,6 @@ from misc.misc import output_preparation
 DISK_AMOUNT = len(psutil.disk_partitions())
 
 def run():
-    print(DISK_AMOUNT)
     logo = output_preparation('logo.txt', DISK_AMOUNT + 5, [3])
     print(
         logo.format(
