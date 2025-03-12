@@ -45,12 +45,16 @@ def memory_stats() -> str:
 def disk_stats():
     res = []
     for i, disk in enumerate(psutil.disk_partitions()):
-        disk_total = psutil.disk_usage(disk.mountpoint).total
-        disk_used = psutil.disk_usage(disk.mountpoint).used
-        res.append(
-            f"\033[93mDisk {i}:\033[00m \033[92m{(disk_used * 9.31 * pow(10, -10)):.2f}Gib\033[00m / \033[91m{(disk_total * 9.31 * pow(10, -10)):.2f}Gib\033[00m\t"
-        )
-    return res
+        try:
+            disk_total = psutil.disk_usage(disk.mountpoint).total
+            disk_used = psutil.disk_usage(disk.mountpoint).used
+            res.append(
+                f"\033[93mDisk {i}:\033[00m \033[92m{(disk_used * 9.31 * 10**-10):.2f}Gib\033[00m / \033[91m{(disk_total * 9.31 * 10**-10):.2f}Gib\033[00m\t"
+            )
+        except (PermissionError, OSError):
+            continue
+
+    return res if res else ["No accessible disks found"]
 
 
 if __name__ == "__main__":
