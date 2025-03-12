@@ -1,6 +1,6 @@
 import psutil
 import platform
-import subprocess
+import wmi
 
 from misc.misc import output_preparation
 
@@ -24,8 +24,8 @@ def os_info():
 
 
 def cpu_stats():
-    command = "wmic cpu get name"
-    cpu_name = subprocess.check_output(command, shell=True).decode().strip().split('\n')[1]
+    c = wmi.WMI()
+    cpu_name = c.Win32_Processor()[0].Name
     return f"\033[93mCPU:\033[00m \033[97m{cpu_name.strip()}\033[00m - \033[92mUsage: {psutil.cpu_percent()}%\033[00m"
 
 def gpu_stats():
