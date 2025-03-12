@@ -52,9 +52,11 @@ Run the script with:
 ```sh
 python pyfetch.py
 ```
+### Custom Logo 🐻‍❄️
+You can customize the ASCII logo by modifying the `logo.txt` file. Simply replace its contents with any ASCII art you like. However, make sure to avoid using special symbols or Unicode characters, as they may not be properly displayed.
 
 ## Screenshot
-![PyFetch Screenshot](https://i.imgur.com/jMkqVx7.jpeg)
+![PyFetch Screenshot](https://i.imgur.com/QHYAiZ9.png)
 
 ## License
 This project is licensed under the MIT License.
