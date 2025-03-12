@@ -3,9 +3,10 @@ import platform
 import wmi
 import GPUtil
 
+from misc.disk_accessibility import active_disks_count
 from misc.misc import output_preparation
 
-DISK_AMOUNT = len(psutil.disk_partitions())
+DISK_AMOUNT = active_disks_count()
 
 def run():
     logo = output_preparation('logo.txt', DISK_AMOUNT + 5, [3])
@@ -55,6 +56,16 @@ def disk_stats():
             continue
 
     return res if res else ["No accessible disks found"]
+
+def active_disks_count():
+    return len([disk for disk in psutil.disk_partitions() if is_disk_accessible(disk.mountpoint)])
+
+def is_disk_accessible(mountpoint):
+    try:
+        psutil.disk_usage(mountpoint)
+        return True
+    except (PermissionError, OSError):
+        return False
 
 
 if __name__ == "__main__":
